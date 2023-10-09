@@ -9,13 +9,12 @@ import {AvatarDropdown, AvatarName} from './components/RightContent/AvatarDropdo
 import {requestConfig} from './requestConfig';
 import {getLoginUserUsingGET} from "@/services/duckapi-backend/userController";
 import {InitialState} from "@/typings";
-import {LOGO} from "@/constants";
+import {LOGO, TOURIST_AVATAR} from "@/constants";
 import {ConfigProvider} from "antd";
 import "./constants/index.less";
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
-const NO_NEED_LOGIN_WHITE_LIST = [loginPath, '/user/register']
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -24,32 +23,30 @@ export async function getInitialState(): Promise<InitialState> {
   const state: InitialState = {
     loginUser: undefined,
     settings: defaultSettings as Partial<LayoutSettings>,
-  }
-  let pathname = history.location.pathname;
-  if (pathname.endsWith("/")) {
-    pathname = pathname.substring(0, pathname.length - 1);
-  }
-  if (NO_NEED_LOGIN_WHITE_LIST.includes(pathname)) {
-    return state;
-  }
+  };
   try {
     const res = await getLoginUserUsingGET();
     if (res.data) {
       state.loginUser = res.data;
     }
   } catch (error) {
-    history.push(loginPath);
+    history.push('/');
   }
   return state;
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => {
-  let userAvatar = initialState?.loginUser?.userAvatar;
-  if (!userAvatar) {
+  const loginUser = initialState?.loginUser;
+  let userAvatar = TOURIST_AVATAR;
+  if (loginUser){
     userAvatar = LOGO;
+    if (loginUser?.userAvatar) {
+      userAvatar = loginUser.userAvatar;
+    }
   }
   return {
+    iconfontUrl: "//at.alicdn.com/t/c/font_4272813_y172awk9ha.js",
     pageTitleRender: false,
     avatarProps: {
       src: userAvatar,
@@ -59,25 +56,6 @@ export const layout: RunTimeLayoutConfig = ({initialState, setInitialState}) => 
       },
     },
     footerRender: () => <Footer/>,
-    onPageChange: () => {
-      const {location} = history;
-      //判断是否为登录或注册页面
-      let pathname = location.pathname;
-      if (pathname.endsWith("/")) {
-        pathname = pathname.substring(0, pathname.length - 1);
-        if (NO_NEED_LOGIN_WHITE_LIST.includes(pathname)) {
-          history.push(pathname);
-          return
-        }
-      }
-      if (NO_NEED_LOGIN_WHITE_LIST.includes(pathname)) {
-        return
-      }
-      // 如果没有登录，重定向到 login
-      if (!initialState?.loginUser) {
-        history.push(loginPath);
-      }
-    },
     layoutBgImgList: [
       {
         src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',

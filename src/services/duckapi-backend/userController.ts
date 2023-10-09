@@ -52,6 +52,14 @@ export async function getLoginUserUsingGET(options?: { [key: string]: any }) {
   });
 }
 
+/** getMyGoldCoinBalance POST /api/user/get/my/gold/coin/balance */
+export async function getMyGoldCoinBalanceUsingPOST(options?: { [key: string]: any }) {
+  return request<API.BaseResponseint>('/api/user/get/my/gold/coin/balance', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
 /** getAccessKey POST /api/user/get/my/key/access */
 export async function getAccessKeyUsingPOST(options?: { [key: string]: any }) {
   return request<API.BaseResponsestring>('/api/user/get/my/key/access', {
@@ -68,10 +76,10 @@ export async function getSecretKeyUsingPOST(options?: { [key: string]: any }) {
   });
 }
 
-/** getUserVOById GET /api/user/get/vo */
-export async function getUserVOByIdUsingGET(
+/** getUserVoById GET /api/user/get/vo */
+export async function getUserVoByIdUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getUserVOByIdUsingGETParams,
+  params: API.getUserVoByIdUsingGETParams,
   options?: { [key: string]: any },
 ) {
   return request<API.BaseResponseUserVO>('/api/user/get/vo', {
@@ -98,8 +106,8 @@ export async function listUserByPageUsingPOST(
   });
 }
 
-/** listUserVOByPage POST /api/user/list/page/vo */
-export async function listUserVOByPageUsingPOST(
+/** listUserVoByPage POST /api/user/list/page/vo */
+export async function listUserVoByPageUsingPOST(
   body: API.UserQueryRequest,
   options?: { [key: string]: any },
 ) {

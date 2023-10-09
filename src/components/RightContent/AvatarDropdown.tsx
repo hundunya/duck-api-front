@@ -1,13 +1,12 @@
 import {LogoutOutlined, SettingOutlined, UserOutlined} from '@ant-design/icons';
-import {useEmotionCss} from '@ant-design/use-emotion-css';
 import {history, useModel} from '@umijs/max';
-import {Spin} from 'antd';
-import {stringify} from 'querystring';
+import {message} from 'antd';
 import type {MenuInfo} from 'rc-menu/lib/interface';
 import React, {useCallback} from 'react';
 import {flushSync} from 'react-dom';
 import HeaderDropdown from '../HeaderDropdown';
 import {userLogoutUsingPOST} from "@/services/duckapi-backend/userController";
+import {NO_NEED_LOGIN_WHITE_LIST} from "@/constants";
 
 export type GlobalHeaderRightProps = {
   children?: React.ReactNode;
@@ -16,95 +15,70 @@ export type GlobalHeaderRightProps = {
 export const AvatarName = () => {
   const { initialState } = useModel('@@initialState');
   const { loginUser } = initialState || {};
-  return <span className="anticon">{loginUser?.userName}</span>;
+  return <span className="anticon">{loginUser? loginUser.userName : "游客"}</span>;
 };
 
 export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ children }) => {
+  const { initialState, setInitialState } = useModel('@@initialState');
+
   /**
    * 退出登录，并且将当前的 url 保存
    */
   const loginOut = async () => {
-    await userLogoutUsingPOST()
-    const { search, pathname } = window.location;
-    const urlParams = new URL(window.location.href).searchParams;
-    /** 此方法会跳转到 redirect 参数所在的位置 */
-    const redirect = urlParams.get('redirect');
-    // Note: There may be security issues, please note
-    if (window.location.pathname !== '/user/login' && !redirect) {
-      history.replace({
-        pathname: '/user/login',
-        search: stringify({
-          redirect: pathname + search,
-        }),
-      });
+    try {
+      const res = await userLogoutUsingPOST();
+      if (res.data) {
+        flushSync(() => {
+          setInitialState((s) => ({...s, loginUser: undefined}));
+          let pathname = history.location.pathname;
+          if (pathname.endsWith("/")) {
+            pathname = pathname.substring(0, pathname.length - 1);
+          }
+          if (!NO_NEED_LOGIN_WHITE_LIST.includes(pathname)){
+            history.push("/");
+          }
+          message.success("退出登录成功");
+        });
+      }
+    } catch (e) {
+      message.error("系统异常");
     }
   };
-  const actionClassName = useEmotionCss(({ token }) => {
-    return {
-      display: 'flex',
-      height: '48px',
-      marginLeft: 'auto',
-      overflow: 'hidden',
-      alignItems: 'center',
-      padding: '0 8px',
-      cursor: 'pointer',
-      borderRadius: token.borderRadius,
-      '&:hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    };
-  });
-  const { initialState, setInitialState } = useModel('@@initialState');
 
   const onMenuClick = useCallback(
-    (event: MenuInfo) => {
+    async (event: MenuInfo) => {
       const { key } = event;
-      // 退出登录
-      if (key === 'logout') {
-        flushSync(() => {
-          setInitialState((s) => ({ ...s, loginUser: undefined }));
-        });
-        loginOut();
-        return;
+      switch (key) {
+        // 退出登录
+        case 'logout':
+          await loginOut();
+          break;
+        // 个人中心
+        case 'center':
+          history.push('/account/center');
+          break;
+        // 个人设置
+        case 'settings':
+          history.push('/account/settings');
+          break;
+        // 用户登录
+        case 'login':
+          history.push('/user/login');
+          break;
+        // 用户注册
+        case 'register':
+          history.push('/user/register');
+          break;
+        default:
+          message.info("功能开发中。。。");
       }
-      // 个人中心
-      if (key === 'center') {
-        history.push('/account/center');
-        return;
-      }
-      // 个人设置
-      if (key === 'settings') {
-        history.push('/account/settings');
-        return;
-      }
-      history.push(`/account/${key}`);
     },
     [setInitialState],
   );
 
-  const loading = (
-    <span className={actionClassName}>
-      <Spin
-        size="small"
-        style={{
-          marginLeft: 8,
-          marginRight: 8,
-        }}
-      />
-    </span>
-  );
+  const { loginUser } = initialState ?? {};
 
-  if (!initialState) {
-    return loading;
-  }
-
-  const { loginUser } = initialState;
-
-  if (!loginUser || !loginUser.userName) {
-    return loading;
-  }
-
-  const menuItems = [
+  let menuItems = [
     ...([]),
     {
       key: 'center',
@@ -125,6 +99,22 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ children }) =
       label: '退出登录',
     },
   ];
+
+  if (!loginUser || !loginUser.userName) {
+    menuItems = [
+      ...([]),
+      {
+        key: 'login',
+        icon: <></>,
+        label: '用户登录',
+      },
+      {
+        key: 'register',
+        icon: <></>,
+        label: '用户注册',
+      },
+    ];
+  }
 
   return (
     <HeaderDropdown

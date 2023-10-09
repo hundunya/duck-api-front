@@ -6,16 +6,13 @@ import {Button, Col, Drawer, message, Row} from 'antd';
 import React, {useRef, useState} from 'react';
 import UpdateForm from './components/UpdateForm';
 import {
-  addInterfaceInfoUsingPOST,
-  deleteInterfaceInfoByIdsUsingPOST,
-  deleteInterfaceInfoUsingPOST,
-  listInterfaceInfoVoByPageUsingPOST,
-  offlineInterfaceUsingPOST,
-  onlineInterfaceUsingPOST,
-  updateInterfaceInfoUsingPOST
-} from "@/services/duckapi-backend/interfaceInfoController";
-import CreateForm from "@/pages/Admin/InterfaceManage/components/CreateForm";
-import ReactJson from "react-json-view";
+  addGoldCoinGoodsUsingPOST,
+  deleteGoldCoinGoodsByIdsUsingPOST,
+  deleteGoldCoinGoodsUsingPOST,
+  listGoldCoinGoodsVoByPageUsingPOST,
+  updateGoldCoinGoodsUsingPOST
+} from "@/services/duckapi-backend/goldCoinGoodsController";
+import CreateForm from "@/pages/Admin/MallManage/components/CreateForm";
 
 const TableList: React.FC = () => {
   /**
@@ -31,7 +28,7 @@ const TableList: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [currentRow, setCurrentRow] = useState<API.InterfaceInfoVO>();
+  const [currentRow, setCurrentRow] = useState<API.GoldCoinGoodsVO>();
   const [ids, setIds] = useState<number[]>([]);
 
   /**
@@ -39,10 +36,10 @@ const TableList: React.FC = () => {
    * @zh-CN 添加节点
    * @param value
    */
-  const handleAdd = async (value: API.InterfaceInfoVO) => {
+  const handleAdd = async (value: API.GoldCoinGoodsVO) => {
     const hide = message.loading('正在添加');
     try {
-      const res = await addInterfaceInfoUsingPOST(value);
+      const res = await addGoldCoinGoodsUsingPOST(value);
       if (res.code === 0) {
         handleModalOpen(false);
         actionRef?.current?.reload?.();
@@ -66,11 +63,11 @@ const TableList: React.FC = () => {
    * @param value
    * @param id
    */
-  const handleUpdate = async (value: API.InterfaceInfoVO, id: number | undefined) => {
-    const hide = message.loading('Configuring');
+  const handleUpdate = async (value: API.GoldCoinGoodsVO, id: number | undefined) => {
+    const hide = message.loading('正在更新');
     value.id = id;
     try {
-      const res = await updateInterfaceInfoUsingPOST(value);
+      const res = await updateGoldCoinGoodsUsingPOST(value);
       const success = res.data;
       if (success) {
         handleUpdateModalOpen(false);
@@ -97,10 +94,10 @@ const TableList: React.FC = () => {
    *
    * @param selectedRow
    */
-  const handleDelete = async (selectedRow: API.InterfaceInfoVO) => {
+  const handleDelete = async (selectedRow: API.GoldCoinGoodsVO) => {
     const hide = message.loading('正在删除');
     try {
-      const res = await deleteInterfaceInfoUsingPOST({id: selectedRow?.id})
+      const res = await deleteGoldCoinGoodsUsingPOST({id: selectedRow?.id})
       const success = res.data;
       if (success) {
         hide();
@@ -126,7 +123,7 @@ const TableList: React.FC = () => {
     const hide = message.loading('正在删除');
     if (!ids) return true;
     try {
-      const res = await deleteInterfaceInfoByIdsUsingPOST(ids);
+      const res = await deleteGoldCoinGoodsByIdsUsingPOST(ids);
       const success = res.data;
       if (success) {
         hide();
@@ -142,63 +139,7 @@ const TableList: React.FC = () => {
     }
   };
 
-  /**
-   *  发布接口
-   * @zh-CN 发布接口
-   *
-   * @param id
-   */
-  const handleOnlineInterface = async (id: number | undefined) => {
-    const hide = message.loading('正在发布');
-    if (!id) {
-      message.error('接口不存在，发布失败');
-      return false;
-    }
-    try {
-      const res = await onlineInterfaceUsingPOST({id: id})
-      const success = res.data;
-      if (success) {
-        hide();
-        return true;
-      }
-      hide();
-      return false;
-    } catch (error) {
-      hide();
-      message.error('发布失败');
-      return false;
-    }
-  };
-
-  /**
-   *  下线接口
-   * @zh-CN 下线接口
-   *
-   * @param id
-   */
-  const handleOfflineInterface = async (id: number | undefined) => {
-    const hide = message.loading('正在关闭');
-    if (!id) {
-      message.error('接口不存在，关闭失败');
-      return false;
-    }
-    try {
-      const res = await offlineInterfaceUsingPOST({id: id})
-      const success = res.data;
-      if (success) {
-        hide();
-        return true;
-      }
-      hide();
-      return false;
-    } catch (error) {
-      hide();
-      message.error('关闭失败');
-      return false;
-    }
-  };
-
-  const columns: ProColumns<API.InterfaceInfoVO>[] = [
+  const columns: ProColumns<API.GoldCoinGoodsVO>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -206,117 +147,28 @@ const TableList: React.FC = () => {
       align: "center"
     },
     {
-      title: '接口名称',
+      title: '商品名称',
       dataIndex: 'name',
       valueType: 'text',
       align: "center"
     },
     {
-      title: '接口描述',
+      title: '商品描述',
       dataIndex: 'description',
       valueType: 'textarea',
       align: "center"
     },
     {
-      title: '接口地址',
-      dataIndex: 'url',
-      valueType: 'textarea',
+      title: '金币数量',
+      dataIndex: 'number',
+      valueType: 'text',
       align: "center"
     },
     {
-      title: '请求方法',
-      dataIndex: 'method',
-      valueType: 'select',
-      valueEnum: {
-        GET: 'GET',
-        POST: 'POST'
-      },
-      align: "center"
-    },
-    {
-      title: '单价（金币）',
+      title: '价格（元）',
       dataIndex: 'price',
       valueType: 'text',
       hideInSearch: true,
-      align: "center"
-    },
-    {
-      title: '请求头',
-      dataIndex: 'requestHeader',
-      valueType: 'textarea',
-      render: (_, record) => {
-        return (
-          <>
-            <ReactJson
-              name={false}
-              src={JSON.parse(record.requestHeader as string)}
-              displayDataTypes={false}
-              collapsed={true}
-              enableClipboard={false}
-            />
-          </>
-        );
-      },
-      align: "center"
-    },
-    {
-      title: '响应头',
-      dataIndex: 'responseHeader',
-      valueType: 'textarea',
-      render: (_, record) => {
-        return (
-          <>
-            <ReactJson
-              name={false}
-              // src={JSON.parse('{"name": "滴滴鸭"}')}
-              src={JSON.parse(record.responseHeader as string)}
-              displayDataTypes={false}
-              collapsed={true}
-              enableClipboard={false}
-            />
-          </>
-        );
-      },
-      align: "center"
-    },
-    {
-      title: '请求参数',
-      dataIndex: 'requestParam',
-      valueType: 'textarea',
-      render: (_, record) => {
-        return (
-          <>
-            <ReactJson
-              name={false}
-              // src={JSON.parse('{"name": "滴滴鸭"}')}
-              src={JSON.parse(record.requestParam as string)}
-              displayDataTypes={false}
-              collapsed={true}
-              enableClipboard={false}
-            />
-          </>
-        );
-      },
-      align: "center"
-    },
-    {
-      title: '响应参数',
-      dataIndex: 'responseParam',
-      valueType: 'textarea',
-      render: (_, record) => {
-        return (
-          <>
-            <ReactJson
-              name={false}
-              // src={JSON.parse('{"name": "滴滴鸭"}')}
-              src={JSON.parse(record.responseParam as string)}
-              displayDataTypes={false}
-              collapsed={true}
-              enableClipboard={false}
-            />
-          </>
-        );
-      },
       align: "center"
     },
     {
@@ -324,22 +176,6 @@ const TableList: React.FC = () => {
       dataIndex: 'createUser',
       valueType: 'text',
       hideInForm: true,
-      align: "center"
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      hideInForm: true,
-      valueEnum: {
-        0: {
-          text: '关闭',
-          status: 'Default',
-        },
-        1: {
-          text: '开启',
-          status: 'Processing',
-        },
-      },
       align: "center"
     },
     {
@@ -376,33 +212,6 @@ const TableList: React.FC = () => {
           <Col
             span={6}
           >
-            {record.status === 0 ? <a
-                key="online"
-                onClick={async () => {
-                  const success = await handleOnlineInterface(record.id)
-                  if (success) {
-                    actionRef.current?.reload?.();
-                  }
-                }}
-              >
-                发布
-              </a> :
-              <a
-                key="offline"
-                onClick={async () => {
-                  const success = await handleOfflineInterface(record.id)
-                  if (success) {
-                    actionRef.current?.reload?.();
-                  }
-                }}
-              >
-                下线
-              </a>}
-          </Col>
-          <Col span={1}/>
-          <Col
-            span={6}
-          >
             <a
               key="delete"
               onClick={() => {
@@ -425,8 +234,8 @@ const TableList: React.FC = () => {
     <PageContainer
       className={"interface-info"}
     >
-      <ProTable<API.InterfaceInfoVO, API.PageParams>
-        headerTitle={'接口管理'}
+      <ProTable<API.GoldCoinGoodsVO, API.PageParams>
+        headerTitle={'商品管理'}
         actionRef={actionRef}
         rowKey="id"
         scroll={{x: "max-content"}}
@@ -449,7 +258,7 @@ const TableList: React.FC = () => {
         ]}
         request={async (params) => {
           setLoading(true);
-          const res = await listInterfaceInfoVoByPageUsingPOST({
+          const res = await listGoldCoinGoodsVoByPageUsingPOST({
             ...params
           })
           setLoading(false);
@@ -521,7 +330,7 @@ const TableList: React.FC = () => {
         closable={false}
       >
         {currentRow?.name && (
-          <ProDescriptions<API.InterfaceInfoVO>
+          <ProDescriptions<API.GoldCoinGoodsVO>
             column={2}
             title={currentRow?.name}
             request={async () => ({
@@ -530,7 +339,7 @@ const TableList: React.FC = () => {
             params={{
               id: currentRow?.id,
             }}
-            columns={columns as ProDescriptionsItemProps<API.InterfaceInfoVO>[]}
+            columns={columns as ProDescriptionsItemProps<API.GoldCoinGoodsVO>[]}
           />
         )}
       </Drawer>

@@ -5,6 +5,30 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseGoldCoinGoods = {
+    code?: number;
+    data?: GoldCoinGoods;
+    message?: string;
+  };
+
+  type BaseResponseGoldCoinGoodsOrder = {
+    code?: number;
+    data?: GoldCoinGoodsOrder;
+    message?: string;
+  };
+
+  type BaseResponseGoldCoinGoodsOrderVO = {
+    code?: number;
+    data?: GoldCoinGoodsOrderVO;
+    message?: string;
+  };
+
+  type BaseResponseGoldCoinGoodsVO = {
+    code?: number;
+    data?: GoldCoinGoodsVO;
+    message?: string;
+  };
+
   type BaseResponseint = {
     code?: number;
     data?: number;
@@ -47,6 +71,30 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponsePageGoldCoinGoods = {
+    code?: number;
+    data?: PageGoldCoinGoods;
+    message?: string;
+  };
+
+  type BaseResponsePageGoldCoinGoodsOrder = {
+    code?: number;
+    data?: PageGoldCoinGoodsOrder;
+    message?: string;
+  };
+
+  type BaseResponsePageGoldCoinGoodsOrderVO = {
+    code?: number;
+    data?: PageGoldCoinGoodsOrderVO;
+    message?: string;
+  };
+
+  type BaseResponsePageGoldCoinGoodsVO = {
+    code?: number;
+    data?: PageGoldCoinGoodsVO;
+    message?: string;
+  };
+
   type BaseResponsePageInterfaceInfoVO = {
     code?: number;
     data?: PageInterfaceInfoVO;
@@ -83,11 +131,42 @@ declare namespace API {
     message?: string;
   };
 
-  type cancelOrderUsingPOSTParams = {
-    outTradeNo?: string;
+  type cancelGoldCoinGoodsOrderUsingPOSTParams = {
+    /** id */
+    id?: number;
+  };
+
+  type createGoldCoinGoodsOrderUsingPOSTParams = {
+    /** goldCoinGoodsId */
+    goldCoinGoodsId?: number;
   };
 
   type DeleteRequest = {
+    id?: number;
+  };
+
+  type getGoldCoinGoodsByIdUsingGETParams = {
+    /** id */
+    id?: number;
+  };
+
+  type getGoldCoinGoodsOrderByIdUsingGETParams = {
+    /** id */
+    id?: number;
+  };
+
+  type getGoldCoinGoodsOrderQrCodeUsingPOSTParams = {
+    /** id */
+    id?: number;
+  };
+
+  type getGoldCoinGoodsOrderVoByIdUsingGETParams = {
+    /** id */
+    id?: number;
+  };
+
+  type getGoldCoinGoodsVoByIdUsingGETParams = {
+    /** id */
     id?: number;
   };
 
@@ -96,19 +175,107 @@ declare namespace API {
     id?: number;
   };
 
-  type getInterfaceLeftNumUsingGETParams = {
-    /** interfaceId */
-    interfaceId?: number;
-  };
-
   type getUserByIdUsingGETParams = {
     /** id */
     id?: number;
   };
 
-  type getUserVOByIdUsingGETParams = {
+  type getUserVoByIdUsingGETParams = {
     /** id */
     id?: number;
+  };
+
+  type GoldCoinGoods = {
+    createTime?: string;
+    createUser?: number;
+    description?: string;
+    id?: number;
+    isDelete?: number;
+    name?: string;
+    number?: number;
+    price?: number;
+    updateTime?: string;
+  };
+
+  type GoldCoinGoodsAddRequest = {
+    description?: string;
+    name?: string;
+    number?: number;
+    price?: number;
+  };
+
+  type GoldCoinGoodsOrder = {
+    createTime?: string;
+    description?: string;
+    id?: number;
+    isDelete?: number;
+    name?: string;
+    number?: number;
+    outTradeNo?: string;
+    payAmount?: number;
+    status?: number;
+    totalAmount?: number;
+    updateTime?: string;
+    userId?: number;
+  };
+
+  type GoldCoinGoodsOrderQueryRequest = {
+    current?: number;
+    description?: string;
+    id?: number;
+    name?: string;
+    number?: number;
+    outTradeNo?: string;
+    pageSize?: number;
+    payAmount?: number;
+    sortField?: string;
+    sortOrder?: string;
+    status?: number;
+    userId?: number;
+  };
+
+  type GoldCoinGoodsOrderVO = {
+    createTime?: string;
+    description?: string;
+    id?: number;
+    name?: string;
+    number?: number;
+    outTradeNo?: string;
+    payAmount?: number;
+    status?: number;
+    totalAmount?: number;
+    userId?: number;
+  };
+
+  type GoldCoinGoodsQueryRequest = {
+    createUser?: number;
+    current?: number;
+    description?: string;
+    id?: number;
+    name?: string;
+    number?: number;
+    pageSize?: number;
+    price?: number;
+    sortField?: string;
+    sortOrder?: string;
+  };
+
+  type GoldCoinGoodsUpdateRequest = {
+    description?: string;
+    id?: number;
+    name?: string;
+    number?: number;
+    price?: number;
+  };
+
+  type GoldCoinGoodsVO = {
+    createTime?: string;
+    createUser?: number;
+    description?: string;
+    id?: number;
+    name?: string;
+    number?: number;
+    price?: number;
   };
 
   type IdRequest = {
@@ -135,6 +302,7 @@ declare namespace API {
     method?: string;
     name?: string;
     pageSize?: number;
+    price?: number;
     requestHeader?: string;
     requestParam?: string;
     responseHeader?: string;
@@ -164,7 +332,6 @@ declare namespace API {
     createUser?: number;
     description?: string;
     id?: number;
-    leftNum?: number;
     method?: string;
     name?: string;
     price?: number;
@@ -173,6 +340,7 @@ declare namespace API {
     responseHeader?: string;
     responseParam?: string;
     status?: number;
+    totalNum?: number;
     url?: string;
   };
 
@@ -183,18 +351,70 @@ declare namespace API {
 
   type LoginUserVO = {
     createTime?: string;
+    goldCoinBalance?: number;
     id?: number;
     signature?: string;
     updateTime?: string;
     userAvatar?: string;
     userName?: string;
-    userProfile?: string;
     userRole?: string;
   };
 
   type OrderItem = {
     asc?: boolean;
     column?: string;
+  };
+
+  type PageGoldCoinGoods = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: GoldCoinGoods[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageGoldCoinGoodsOrder = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: GoldCoinGoodsOrder[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageGoldCoinGoodsOrderVO = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: GoldCoinGoodsOrderVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
+  };
+
+  type PageGoldCoinGoodsVO = {
+    countId?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: GoldCoinGoodsVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
   };
 
   type PageInterfaceInfoVO = {
@@ -236,26 +456,19 @@ declare namespace API {
     total?: number;
   };
 
-  type payOrderUsingPOSTParams = {
-    interfaceId?: number;
-    invokeCount?: number;
-  };
-
   type User = {
     accessKey?: string;
     createTime?: string;
+    goldCoinBalance?: number;
     id?: number;
     isDelete?: number;
-    mpOpenId?: string;
     secretKey?: string;
     signature?: string;
-    unionId?: string;
     updateTime?: string;
     userAccount?: string;
     userAvatar?: string;
     userName?: string;
     userPassword?: string;
-    userProfile?: string;
     userRole?: string;
   };
 
@@ -274,15 +487,13 @@ declare namespace API {
 
   type UserQueryRequest = {
     current?: number;
+    goldCoinBalance?: number;
     id?: number;
-    mpOpenId?: string;
     pageSize?: number;
     signature?: string;
     sortField?: string;
     sortOrder?: string;
-    unionId?: string;
     userName?: string;
-    userProfile?: string;
     userRole?: string;
   };
 
@@ -296,7 +507,6 @@ declare namespace API {
     signature?: string;
     userAvatar?: string;
     userName?: string;
-    userProfile?: string;
   };
 
   type UserUpdatePasswordRequest = {
@@ -306,21 +516,21 @@ declare namespace API {
   };
 
   type UserUpdateRequest = {
+    goldCoinBalance?: number;
     id?: number;
     signature?: string;
     userAvatar?: string;
     userName?: string;
-    userProfile?: string;
     userRole?: string;
   };
 
   type UserVO = {
     createTime?: string;
+    goldCoinBalance?: number;
     id?: number;
     signature?: string;
     userAvatar?: string;
     userName?: string;
-    userProfile?: string;
     userRole?: string;
   };
 }

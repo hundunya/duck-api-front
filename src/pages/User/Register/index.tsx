@@ -1,6 +1,6 @@
 import Footer from '@/components/Footer';
 import {LockOutlined, UserOutlined,} from '@ant-design/icons';
-import {LoginForm, ProFormText,} from '@ant-design/pro-components';
+import {LoginForm,} from '@ant-design/pro-components';
 import {useEmotionCss} from '@ant-design/use-emotion-css';
 import {Helmet, history} from '@umijs/max';
 import {Form, Input, message, Tabs} from 'antd';
@@ -179,7 +179,7 @@ const Register: React.FC = () => {
               }}
               href={'/user/login'}
             >
-              登录
+              已有账号？前往登录
             </a>
           </div>
         </LoginForm>

@@ -1,6 +1,6 @@
 import {ActionType, EditableProTable, ProColumns, ProForm, ProFormInstance,} from '@ant-design/pro-components';
 import '@umijs/max';
-import {ConfigProvider, Input, InputNumber, message, Modal, Select} from 'antd';
+import {ConfigProvider, Input, InputNumber, Modal, Select} from 'antd';
 import React, {useRef, useState} from 'react';
 
 export type BaseFormProps = {
@@ -794,7 +794,7 @@ const BaseForm: React.FC<BaseFormProps> = (props) => {
             />
           </ProForm.Item>
           <ProForm.Item
-            label={"单价"}
+            label={"单价（金币）"}
             name={"price"}
             rules={[
               {
@@ -805,8 +805,8 @@ const BaseForm: React.FC<BaseFormProps> = (props) => {
           >
             <InputNumber
               placeholder={"请输入接口单价"}
-              min={0.01}
-              precision={2}
+              min={1}
+              precision={0}
               controls={false}
               style={{
                 width: '125px'

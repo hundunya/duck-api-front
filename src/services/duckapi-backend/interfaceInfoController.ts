@@ -47,21 +47,6 @@ export async function deleteInterfaceInfoUsingPOST(
   });
 }
 
-/** getInterfaceLeftNum GET /api/interface-info/get/interface/leftNum */
-export async function getInterfaceLeftNumUsingGET(
-  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.getInterfaceLeftNumUsingGETParams,
-  options?: { [key: string]: any },
-) {
-  return request<API.BaseResponseint>('/api/interface-info/get/interface/leftNum', {
-    method: 'GET',
-    params: {
-      ...params,
-    },
-    ...(options || {}),
-  });
-}
-
 /** getInterfaceInfoVoById GET /api/interface-info/get/vo */
 export async function getInterfaceInfoVoByIdUsingGET(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -98,6 +83,21 @@ export async function listInterfaceInfoVoByPageUsingPOST(
   options?: { [key: string]: any },
 ) {
   return request<API.BaseResponsePageInterfaceInfoVO>('/api/interface-info/list/page/vo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
+/** listInterfaceInfoVoByNameOrDescription POST /api/interface-info/list/query/vo */
+export async function listInterfaceInfoVoByNameOrDescriptionUsingPOST(
+  body: API.InterfaceInfoQueryRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponsePageInterfaceInfoVO>('/api/interface-info/list/query/vo', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

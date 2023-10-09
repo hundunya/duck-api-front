@@ -1,15 +1,15 @@
 import Footer from '@/components/Footer';
 import {LockOutlined, UserOutlined,} from '@ant-design/icons';
-import {LoginForm, ProForm, ProFormCheckbox, ProFormText,} from '@ant-design/pro-components';
+import {LoginForm,} from '@ant-design/pro-components';
 import {useEmotionCss} from '@ant-design/use-emotion-css';
 import {Helmet, history, useModel} from '@umijs/max';
 import {Form, Input, message, Tabs} from 'antd';
 import React, {useState} from 'react';
 import Settings from '../../../../config/defaultSettings';
+import defaultSettings from '../../../../config/defaultSettings';
 import {userLoginUsingPOST} from "@/services/duckapi-backend/userController";
 import {flushSync} from "react-dom";
 import {LOGO} from "@/constants";
-import defaultSettings from "../../../../config/defaultSettings";
 import {Settings as LayoutSettings} from "@ant-design/pro-layout";
 
 const Login: React.FC = () => {
@@ -76,7 +76,8 @@ const Login: React.FC = () => {
           logo={<img alt="logo" src={LOGO} />}
           title="Duck API"
           initialValues={{
-            autoLogin: true,
+            userAccount: '',
+            userPassword: ''
           }}
           onFinish={async (values) => {
             await handleSubmit(values as API.UserLoginRequest);
@@ -153,16 +154,17 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
-              自动登录
-            </ProFormCheckbox>
+            {/*<ProFormCheckbox noStyle name="autoLogin">*/}
+            {/*  自动登录*/}
+            {/*</ProFormCheckbox>*/}
             <a
               style={{
-                float: 'right'
+                float: 'right',
+                marginBottom: '16px'
               }}
               href={'/user/register'}
             >
-              注册账号
+              没有账号？前往注册
             </a>
           </div>
         </LoginForm>
