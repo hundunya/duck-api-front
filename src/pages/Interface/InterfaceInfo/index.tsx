@@ -233,7 +233,9 @@ const Index: React.FC = () => {
 
   //轮询剩余调用次数
   useEffect(() => {
-    getGoldCoinBalance();
+    if (initialState?.loginUser){
+      getGoldCoinBalance();
+    }
   }, [invokeResult]);
 
   return (

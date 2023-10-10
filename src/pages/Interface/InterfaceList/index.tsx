@@ -164,7 +164,7 @@ const Index: React.FC = () => {
                                 </ProCard>
                                 <ProCard
                                     onClick={() => {
-                                        history.push(`/interface_info/${item.id}`)
+                                        history.push(`/interface/info?id=${item.id}`)
                                     }}
                                     layout="center"
                                     style={{
@@ -176,7 +176,7 @@ const Index: React.FC = () => {
                                 </ProCard>
                                 <ProCard
                                     onClick={() => {
-                                        history.push(`/interface_info/${item.id}`)
+                                        history.push(`/interface/info?id=${item.id}`)
                                     }}
                                     layout="center"
                                     style={{
